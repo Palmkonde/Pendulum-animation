@@ -19,6 +19,18 @@ omega0 = 0.0  # Initial angular velocity (rad/s)
 
 # Time array
 t = np.arange(0, T, dt)
+n_steps = len(t)
+
+# Initialize state vectors for Euler method
+euler_state = np.zeros((2, n_steps))
+euler_state[:, 0] = [theta0, omega0]  # Initial conditions [theta, omega]
+
+# Calculate Euler solution using vectorized operations
+for i in range(1, n_steps):
+    euler_state[:, i] = euler_state[:, i-1] + np.array([
+        euler_state[1, i-1],
+        -(g/L) * np.sin(euler_state[0, i-1])
+    ]) * dt
 
 # RK4 method function
 def rk4_step(theta, omega, dt):
@@ -37,23 +49,18 @@ def rk4_step(theta, omega, dt):
     state_new = state + dt * (k1 + 2*k2 + 2*k3 + k4) / 6
     return state_new[0], state_new[1]
 
-# Calculate trajectories for both methods
-theta_euler = np.zeros_like(t)
-omega_euler = np.zeros_like(t)
+# Extract theta and omega from euler_state for compatibility with existing code
+theta_euler = euler_state[0, :]
+omega_euler = euler_state[1, :]
+
+# RK4 method remains the same
 theta_rk4 = np.zeros_like(t)
 omega_rk4 = np.zeros_like(t)
+theta_rk4[0] = theta0
+omega_rk4[0] = omega0
 
-# Initial conditions
-theta_euler[0] = theta_rk4[0] = theta0
-omega_euler[0] = omega_rk4[0] = omega0
-
-# Calculate both solutions
+# Calculate RK4 solution
 for i in range(1, len(t)):
-    # Euler method
-    omega_euler[i] = omega_euler[i-1] - (g/L) * np.sin(theta_euler[i-1]) * dt
-    theta_euler[i] = theta_euler[i-1] + omega_euler[i] * dt
-    
-    # RK4 method
     theta_rk4[i], omega_rk4[i] = rk4_step(theta_rk4[i-1], omega_rk4[i-1], dt)
 
 # Set up the figure and animation
