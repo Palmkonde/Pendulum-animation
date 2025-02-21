@@ -3,10 +3,16 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Circle, Arc
 
+"""
+Cool: L=2.5, theta0 = pi-0.01
+Weird: L=2, theta0 = pi/3, dt=0.5
+WeirdV2: L=2.5 theta0= pi-0.01 dt=0.5
+"""
+
 # Parameters
-L = 2.0  # Length of pendulum (m)
+L = 2.0  # Length of pendulum (m) //
 g = 9.81  # Gravitational acceleration (m/s^2)
-dt = 0.01  # Time step (s)
+dt = 0.01 # Time step (s)
 T = 50.0  # Total time (s)
 theta0 = np.pi/3  # Initial angle (radians)
 omega0 = 0.0  # Initial angular velocity (rad/s)
